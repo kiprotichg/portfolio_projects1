@@ -1,1 +1,4 @@
 __pycache__/ 
+node_modules/ 
+attendqr-full-stack/backend/.env 
+attendqr-full-stack/backend/attendqr.db 
