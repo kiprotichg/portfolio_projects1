@@ -1,0 +1,66 @@
+
+================================================================================
+CAR PRICE PREDICTION MODEL - SUMMARY REPORT
+================================================================================
+
+1. DATASET INFORMATION
+   - Total Samples: 2,000
+   - Number of Brands: 15
+   - Price Range: $5,000.00 - $231,154.53
+   - Average Price: $35,556.01
+   - Price Std Dev: $26,202.34
+   
+
+2. BEST MODEL
+   - Model Name: Gradient Boosting
+   - Algorithm Type: Tree-based Ensemble
+
+3. TOP 5 FEATURES BY IMPORTANCE
+   18. price_per_cc: 0.6665
+   6. engine_size: 0.1792
+   17. price_per_hp: 0.1177
+   7. horsepower: 0.0326
+   10. num_cylinders: 0.0008
+
+4. MODEL PERFORMANCE
+   Linear Regression:
+     - Test RMSE: $9,904.82
+     - Test MAE: $6,673.26
+     - Test R�: 0.8678
+
+   Ridge Regression:
+     - Test RMSE: $9,906.23
+     - Test MAE: $6,672.69
+     - Test R�: 0.8677
+
+   Lasso Regression:
+     - Test RMSE: $9,904.32
+     - Test MAE: $6,672.41
+     - Test R�: 0.8678
+
+   Random Forest:
+     - Test RMSE: $5,733.23
+     - Test MAE: $1,664.39
+     - Test R�: 0.9557
+
+   Gradient Boosting:
+     - Test RMSE: $3,671.34
+     - Test MAE: $1,316.29
+     - Test R�: 0.9818
+
+   XGBoost:
+     - Test RMSE: $4,212.94
+     - Test MAE: $1,475.14
+     - Test R�: 0.9761
+
+   LightGBM:
+     - Test RMSE: $5,481.45
+     - Test MAE: $1,716.86
+     - Test R�: 0.9595
+
+   SVR:
+     - Test RMSE: $26,500.49
+     - Test MAE: $17,206.05
+     - Test R�: 0.0534
+
+================================================================================

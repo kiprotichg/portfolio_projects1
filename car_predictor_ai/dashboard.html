@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Prediction AI - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .status {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 968px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #764ba2;
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .btn-small {
+            width: auto;
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            font-size: 14px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .auth-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .auth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            animation: slideIn 0.3s;
+        }
+        
+        .auth-box h2 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .auth-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .auth-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        .auth-btn:hover {
+            background: #764ba2;
+        }
+        
+        .auth-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .auth-link a {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .logout-btn {
+            background: #f44336;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .logout-btn:hover {
+            background: #d32f2f;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            animation: slideIn 0.3s;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .close:hover {
+            color: #667eea;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .modal-header h2 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .result-item {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            text-align: center;
+        }
+        
+        .result-item-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .result-item-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .result-text {
+            font-size: 14px;
+            color: #333;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+            line-height: 1.6;
+        }
+        
+        .recommendation {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin: 15px 0;
+            font-size: 16px;
+        }
+        
+        .recommendation.good {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .recommendation.warning {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        
+        .recommendation.bad {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .modal-close-btn {
+            margin-top: 20px;
+            background: #667eea;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+        }
+        
+        .modal-close-btn:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth Container -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-box">
+            <!-- Login Form -->
+            <div class="auth-form active" id="loginForm">
+                <h2>🔐 Login</h2>
+                <div class="error-message" id="loginError"></div>
+                <form onsubmit="handleLogin(event)">
+                    <input type="email" class="auth-input" placeholder="Email" id="loginEmail" required>
+                    <input type="password" class="auth-input" placeholder="Password (min 6 chars)" id="loginPassword" required>
+                    <button type="submit" class="auth-btn">Login</button>
+                </form>
+                <div class="auth-link">
+                    Don't have an account? <a onclick="showSignupForm()">Sign Up</a>
+                </div>
+                <div class="auth-link">
+                    <a onclick="showForgotForm()">Forgot Password?</a>
+                </div>
+            </div>
+            
+            <!-- Signup Form -->
+            <div class="auth-form" id="signupForm">
+                <h2>📝 Sign Up</h2>
+                <div class="error-message" id="signupError"></div>
+                <form onsubmit="handleSignup(event)">
+                    <input type="text" class="auth-input" placeholder="Full Name" id="signupName" required>
+                    <input type="email" class="auth-input" placeholder="Email" id="signupEmail" required>
+                    <input type="tel" class="auth-input" placeholder="Phone (e.g., +11234567890)" id="signupPhone" required>
+                    <input type="password" class="auth-input" placeholder="Password (min 6 chars)" id="signupPassword" required>
+                    <input type="password" class="auth-input" placeholder="Confirm Password" id="confirmPassword" required>
+                    <button type="submit" class="auth-btn">Sign Up</button>
+                </form>
+                <div class="auth-link">
+                    Already have an account? <a onclick="showLoginForm()">Login</a>
+                </div>
+            </div>
+            
+            <!-- Forgot Password Form -->
+            <div class="auth-form" id="forgotForm">
+                <h2>🔍 Forgot Password</h2>
+                <div class="error-message" id="forgotError"></div>
+                <div class="success-message" id="forgotSuccess"></div>
+                <form onsubmit="handleForgot(event)">
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Enter your email and we'll send a reset code.</p>
+                    <input type="email" class="auth-input" placeholder="Email" id="forgotEmail" required>
+                    <button type="submit" class="auth-btn">Send Reset Code</button>
+                </form>
+                <div class="auth-link">
+                    <a onclick="showLoginForm()">Back to Login</a>
+                </div>
+            </div>
+            
+            <!-- Reset Password Form -->
+            <div class="auth-form" id="resetForm">
+                <h2>🔑 Reset Password</h2>
+                <div class="error-message" id="resetError"></div>
+                <form onsubmit="handleReset(event)">
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">Enter the 6-character code sent to your phone via SMS.</p>
+                    <input type="text" class="auth-input" placeholder="6-character code" id="resetCode" maxlength="6" required>
+                    <input type="password" class="auth-input" placeholder="New Password (min 6 chars)" id="resetPassword" required>
+                    <input type="password" class="auth-input" placeholder="Confirm Password" id="confirmResetPassword" required>
+                    <button type="submit" class="auth-btn">Reset Password</button>
+                </form>
+                <div class="auth-link">
+                    <a onclick="showLoginForm()">Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Dashboard (hidden by default) -->
+    <div id="dashboardContainer" style="display: none;">
+        <div class="container">
+            <div class="user-info" id="userInfo">
+                <div>
+                    <strong>Welcome, <span id="userName">User</span>!</strong>
+                    <div style="font-size: 12px; color: #666; margin-top: 5px;" id="userEmail"></div>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            </div>
+            <h1>🚗 Car Price Prediction AI</h1>
+            <p>REST API Dashboard</p>
+            <div class="status">✓ Server Running</div>
+        </div>
+        
+        <div class="content">
+            <!-- Single Prediction -->
+            <div class="card">
+                <h2>Single Car Prediction</h2>
+                <form id="singleForm">
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Brand</label>
+                            <select id="brand" required>
+                                <option value="">Select Brand</option>
+                                <option value="Toyota">Toyota</option>
+                                <option value="Honda">Honda</option>
+                                <option value="BMW">BMW</option>
+                                <option value="Mercedes">Mercedes</option>
+                                <option value="Audi">Audi</option>
+                                <option value="Ford">Ford</option>
+                                <option value="Chevrolet">Chevrolet</option>
+                                <option value="Hyundai">Hyundai</option>
+                                <option value="Kia">Kia</option>
+                                <option value="Volkswagen">Volkswagen</option>
+                                <option value="Mazda">Mazda</option>
+                                <option value="Nissan">Nissan</option>
+                                <option value="Subaru">Subaru</option>
+                                <option value="Volvo">Volvo</option>
+                                <option value="Jeep">Jeep</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Model Year</label>
+                            <input type="number" id="modelYear" min="2000" max="2026" value="2022" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Mileage (km)</label>
+                            <input type="number" id="mileage" min="0" value="30000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fuel Type</label>
+                            <select id="fuelType" required>
+                                <option value="Gasoline">Gasoline</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="Hybrid">Hybrid</option>
+                                <option value="Electric">Electric</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Transmission</label>
+                            <select id="transmission" required>
+                                <option value="Automatic">Automatic</option>
+                                <option value="Manual">Manual</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Engine Size (L)</label>
+                            <input type="number" id="engineSize" min="0.5" max="8" step="0.1" value="2.5" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Horsepower</label>
+                            <input type="number" id="horsepower" min="50" max="500" value="180" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Body Type</label>
+                            <select id="bodyType" required>
+                                <option value="Sedan">Sedan</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Coupe">Coupe</option>
+                                <option value="Hatchback">Hatchback</option>
+                                <option value="Truck">Truck</option>
+                                <option value="Van">Van</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Color</label>
+                            <select id="color" required>
+                                <option value="Silver">Silver</option>
+                                <option value="Black">Black</option>
+                                <option value="White">White</option>
+                                <option value="Red">Red</option>
+                                <option value="Blue">Blue</option>
+                                <option value="Gray">Gray</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Cylinders</label>
+                            <input type="number" id="numCylinders" min="2" max="12" value="4" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Fuel Efficiency (MPG)</label>
+                            <input type="number" id="fuelEfficiency" min="10" max="60" value="28" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mileage Category</label>
+                            <select id="mileageCategory" required>
+                                <option value="Low">Low (&lt;30k km)</option>
+                                <option value="Medium">Medium (30-100k km)</option>
+                                <option value="High">High (&gt;100k km)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Owner Count</label>
+                            <input type="number" id="ownerCount" min="1" max="10" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Annual Mileage (km)</label>
+                            <input type="number" id="annualMileage" min="0" max="50000" value="10000" required>
+                        </div>
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="accidentFree" checked>
+                            <label for="accidentFree">Accident Free</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="serviceHistory" checked>
+                            <label for="serviceHistory">Service History</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn">💰 Predict Price</button>
+                    <div class="loading" id="singleLoading"><span class="spinner"></span>Processing...</div>
+                </form>
+            </div>
+            
+            <!-- Market Comparison -->
+            <div class="card">
+                <h2>Market Price Comparison</h2>
+                <form id="compareForm">
+                    <div class="form-group">
+                        <label>Market Price ($)</label>
+                        <input type="number" id="marketPrice" min="1000" value="5000" required>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin-top: 10px;">Fill the same fields as Single Prediction, then compare with market price</p>
+                    <button type="submit" class="btn" style="margin-top: 15px;">📊 Compare Price</button>
+                    <div class="loading" id="compareLoading"><span class="spinner"></span>Processing...</div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Health & Info -->
+        <div class="card">
+            <h2>API Status & Information</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <button class="btn btn-small" onclick="checkHealth()">✓ Check Health</button>
+                <button class="btn btn-small" onclick="getInfo()">ℹ️ Get Info</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Prediction Result Modal -->
+    <div id="predictionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closePredictionModal()">&times;</span>
+                <h2>💰 Price Prediction Result</h2>
+            </div>
+            <div id="predictionContent"></div>
+            <button class="modal-close-btn" onclick="closePredictionModal()">Close</button>
+        </div>
+    </div>
+    
+    <!-- Comparison Result Modal -->
+    <div id="comparisonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeComparisonModal()">&times;</span>
+                <h2>📊 Market Comparison Result</h2>
+            </div>
+            <div id="comparisonContent"></div>
+            <button class="modal-close-btn" onclick="closeComparisonModal()">Close</button>
+        </div>
+    </div>
+    
+    <!-- Status Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeStatusModal()">&times;</span>
+                <h2>ℹ️ System Status</h2>
+            </div>
+            <div id="statusContent"></div>
+            <button class="modal-close-btn" onclick="closeStatusModal()">Close</button>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://localhost:5000';
+        
+        document.getElementById('singleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const carData = {
+                brand: document.getElementById('brand').value,
+                model_year: parseInt(document.getElementById('modelYear').value),
+                mileage: parseInt(document.getElementById('mileage').value),
+                fuel_type: document.getElementById('fuelType').value,
+                transmission: document.getElementById('transmission').value,
+                engine_size: parseFloat(document.getElementById('engineSize').value),
+                horsepower: parseInt(document.getElementById('horsepower').value),
+                body_type: document.getElementById('bodyType').value,
+                color: document.getElementById('color').value,
+                num_cylinders: parseInt(document.getElementById('numCylinders').value),
+                fuel_efficiency: parseInt(document.getElementById('fuelEfficiency').value),
+                mileage_category: document.getElementById('mileageCategory').value,
+                owner_count: parseInt(document.getElementById('ownerCount').value),
+                annual_mileage: parseInt(document.getElementById('annualMileage').value),
+                is_accident_free: document.getElementById('accidentFree').checked,
+                has_service_history: document.getElementById('serviceHistory').checked
+            };
+            
+            await predictPrice(carData);
+        });
+        
+        document.getElementById('compareForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const carData = {
+                brand: document.getElementById('brand').value,
+                model_year: parseInt(document.getElementById('modelYear').value),
+                mileage: parseInt(document.getElementById('mileage').value),
+                fuel_type: document.getElementById('fuelType').value,
+                transmission: document.getElementById('transmission').value,
+                engine_size: parseFloat(document.getElementById('engineSize').value),
+                horsepower: parseInt(document.getElementById('horsepower').value),
+                body_type: document.getElementById('bodyType').value,
+                color: document.getElementById('color').value,
+                num_cylinders: parseInt(document.getElementById('numCylinders').value),
+                fuel_efficiency: parseInt(document.getElementById('fuelEfficiency').value),
+                mileage_category: document.getElementById('mileageCategory').value,
+                owner_count: parseInt(document.getElementById('ownerCount').value),
+                annual_mileage: parseInt(document.getElementById('annualMileage').value),
+                is_accident_free: document.getElementById('accidentFree').checked,
+                has_service_history: document.getElementById('serviceHistory').checked
+            };
+            
+            const compareData = {
+                car_data: carData,
+                market_price: parseFloat(document.getElementById('marketPrice').value)
+            };
+            
+            await comparePrice(compareData);
+        });
+        
+        async function predictPrice(carData) {
+            document.getElementById('singleLoading').style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/predict`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(carData)
+                });
+                
+                const result = await response.json();
+                document.getElementById('singleLoading').style.display = 'none';
+                
+                if (response.ok) {
+                    showPredictionResult(result, carData);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                document.getElementById('singleLoading').style.display = 'none';
+                alert('Request failed: ' + error.message);
+            }
+        }
+        
+        async function comparePrice(compareData) {
+            document.getElementById('compareLoading').style.display = 'block';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/predict/compare`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(compareData)
+                });
+                
+                const result = await response.json();
+                document.getElementById('compareLoading').style.display = 'none';
+                
+                if (response.ok) {
+                    showComparisonResult(result);
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                document.getElementById('compareLoading').style.display = 'none';
+                alert('Request failed: ' + error.message);
+            }
+        }
+        
+        function showPredictionResult(data, carData) {
+            const content = `
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-item-label">Predicted Price</div>
+                        <div class="result-item-value">$${data.predicted_price.toLocaleString()}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">Model Used</div>
+                        <div class="result-item-value" style="font-size: 16px;">${data.model_used}</div>
+                    </div>
+                </div>
+                <div class="result-text">
+                    <strong>📊 Confidence Interval (68%):</strong><br>
+                    💰 $${data.lower_bound.toLocaleString()} - $${data.upper_bound.toLocaleString()}
+                </div>
+                <div class="result-text">
+                    <strong>🚗 Car Details:</strong><br>
+                    ${carData.model_year} ${carData.brand} ${carData.body_type}<br>
+                    Mileage: ${carData.mileage.toLocaleString()} km<br>
+                    Fuel: ${carData.fuel_type} | Engine: ${carData.engine_size}L | HP: ${carData.horsepower}
+                </div>
+            `;
+            document.getElementById('predictionContent').innerHTML = content;
+            document.getElementById('predictionModal').style.display = 'block';
+        }
+        
+        function showComparisonResult(data) {
+            const diff = data.difference;
+            let recommendation = data.recommendation;
+            let recClass = 'bad';
+            
+            if (recommendation === 'GOOD DEAL') recClass = 'good';
+            else if (recommendation === 'FAIR PRICE') recClass = 'warning';
+            else recClass = 'bad';
+            
+            const arrow = diff > 0 ? '📈' : diff < 0 ? '📉' : '➡️';
+            
+            const content = `
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-item-label">Predicted Price</div>
+                        <div class="result-item-value">$${data.predicted_price.toLocaleString()}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-item-label">Market Price</div>
+                        <div class="result-item-value">$${data.market_price.toLocaleString()}</div>
+                    </div>
+                </div>
+                <div class="result-item" style="margin-top: 15px; text-align: center;">
+                    <div class="result-item-label">Difference</div>
+                    <div class="result-item-value" style="font-size: 24px;">
+                        ${arrow} $${Math.abs(diff).toLocaleString()}
+                    </div>
+                    <div style="margin-top: 10px; font-size: 16px; color: #667eea; font-weight: bold;">
+                        ${data.percentage_difference > 0 ? '+' : ''}${data.percentage_difference.toFixed(2)}%
+                    </div>
+                </div>
+                <div class="recommendation ${recClass}">
+                    🎯 ${recommendation}
+                </div>
+                <div class="result-text">
+                    <strong>📋 Analysis:</strong><br>
+                    ${diff < 0 ? '✅ Great Deal! Market price is LOWER than predicted value.' : 
+                      diff > 0 ? '⚠️ Higher Price! Market price is HIGHER than predicted value.' : 
+                      '✅ Perfect Match! Market price equals predicted value.'}
+                </div>
+            `;
+            document.getElementById('comparisonContent').innerHTML = content;
+            document.getElementById('comparisonModal').style.display = 'block';
+        }
+        
+        async function checkHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const result = await response.json();
+                showStatusResult(result, 'Health Check');
+            } catch (error) {
+                alert('Failed to check health: ' + error.message);
+            }
+        }
+        
+        async function getInfo() {
+            try {
+                const response = await fetch(`${API_BASE}/api/info`);
+                const result = await response.json();
+                showStatusResult(result, 'Model Information');
+            } catch (error) {
+                alert('Failed to get info: ' + error.message);
+            }
+        }
+        
+        function showStatusResult(data, title) {
+            let content = `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">`;
+            
+            for (let key in data) {
+                if (key !== 'endpoints' && key !== 'documentation') {
+                    const value = typeof data[key] === 'boolean' ? (data[key] ? '✓ Yes' : '✗ No') : data[key];
+                    content += `
+                        <div style="padding: 15px; background: linear-gradient(135deg, #667eea15, #764ba215); border-radius: 8px; border-left: 4px solid #667eea;">
+                            <strong>${key}</strong><br>
+                            <span style="color: #667eea; font-weight: bold; font-size: 16px;">${value}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            content += '</div>';
+            
+            if (data.endpoints) {
+                content += '<div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px; border-left: 4px solid #667eea;">';
+                content += '<strong>📡 Available Endpoints:</strong><ul style="margin-top: 10px; margin-left: 20px;">';
+                for (let endpoint in data.endpoints) {
+                    content += `<li style="margin: 8px 0;"><strong>${endpoint}:</strong> ${data.endpoints[endpoint]}</li>`;
+                }
+                content += '</ul></div>';
+            }
+            
+            document.getElementById('statusContent').innerHTML = content;
+            document.getElementById('statusModal').style.display = 'block';
+        }
+        
+        function closePredictionModal() {
+            document.getElementById('predictionModal').style.display = 'none';
+        }
+        
+        function closeComparisonModal() {
+            document.getElementById('comparisonModal').style.display = 'none';
+        }
+        
+        function closeStatusModal() {
+            document.getElementById('statusModal').style.display = 'none';
+        }
+        
+        window.onclick = function(event) {
+            const predModal = document.getElementById('predictionModal');
+            const compModal = document.getElementById('comparisonModal');
+            const statusMod = document.getElementById('statusModal');
+            
+            if (event.target == predModal) predModal.style.display = 'none';
+            if (event.target == compModal) compModal.style.display = 'none';
+            if (event.target == statusMod) statusMod.style.display = 'none';
+        }
+        
+        // ==================== AUTHENTICATION ==================== //
+        
+        // Initialize app on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (user) {
+                showDashboard(user);
+            }
+        });
+        
+        // Form navigation
+        function showLoginForm() {
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.getElementById('loginForm').classList.add('active');
+            clearErrors();
+        }
+        
+        function showSignupForm() {
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.getElementById('signupForm').classList.add('active');
+            clearErrors();
+        }
+        
+        function showForgotForm() {
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.getElementById('forgotForm').classList.add('active');
+            clearErrors();
+        }
+        
+        function showResetForm(email) {
+            document.getElementById('forgotEmail').value = email;
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.getElementById('resetForm').classList.add('active');
+            clearErrors();
+        }
+        
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(e => e.classList.remove('show'));
+            document.querySelectorAll('.success-message').forEach(e => e.classList.remove('show'));
+        }
+        
+        // Validation
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function validatePassword(password) {
+            return password.length >= 6;
+        }
+        
+        // Generate 6-character reset code
+        function generateResetCode() {
+            return Math.random().toString(36).substr(2, 6).toUpperCase();
+        }
+        
+        // Handle Signup
+        function handleSignup(event) {
+            event.preventDefault();
+            clearErrors();
+            
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorDiv = document.getElementById('signupError');
+            
+            // Validation
+            if (!name) {
+                errorDiv.textContent = '❌ Please enter your name';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                errorDiv.textContent = '❌ Please enter a valid email';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            if (!phone || phone.length < 10) {
+                errorDiv.textContent = '❌ Please enter a valid phone number';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            if (!validatePassword(password)) {
+                errorDiv.textContent = '❌ Password must be at least 6 characters';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                errorDiv.textContent = '❌ Passwords do not match';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            // Check if email exists
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            if (users.find(u => u.email === email)) {
+                errorDiv.textContent = '❌ Email already registered';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            // Save user
+            users.push({ name, email, phone, password });
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Show success and login
+            alert('✅ Signup successful! Please login.');
+            showLoginForm();
+            document.getElementById('loginEmail').value = email;
+        }
+        
+        // Handle Login
+        function handleLogin(event) {
+            event.preventDefault();
+            clearErrors();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            if (!validateEmail(email)) {
+                errorDiv.textContent = '❌ Invalid email or password';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            if (!validatePassword(password)) {
+                errorDiv.textContent = '❌ Invalid email or password';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (!user) {
+                errorDiv.textContent = '❌ Invalid email or password';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            // Login successful
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            showDashboard(user);
+        }
+        
+        // Handle Forgot Password
+        function handleForgot(event) {
+            event.preventDefault();
+            clearErrors();
+            
+            const email = document.getElementById('forgotEmail').value.trim();
+            const errorDiv = document.getElementById('forgotError');
+            const successDiv = document.getElementById('forgotSuccess');
+            
+            if (!validateEmail(email)) {
+                errorDiv.textContent = '❌ Please enter a valid email';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email);
+            
+            if (!user) {
+                errorDiv.textContent = '❌ Email not found';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            // Generate and save reset code
+            const resetCode = generateResetCode();
+            let resetCodes = JSON.parse(localStorage.getItem('resetCodes')) || {};
+            resetCodes[email] = { code: resetCode, timestamp: Date.now() };
+            localStorage.setItem('resetCodes', JSON.stringify(resetCodes));
+            
+            // Simulate SMS delivery
+            const phone = user.phone;
+            const maskedPhone = maskPhone(phone);
+            
+            // Show SMS sent message
+            successDiv.textContent = `✅ Reset code sent via SMS to ${maskedPhone}! Code: ${resetCode}`;
+            successDiv.classList.add('show');
+            
+            // Log SMS for testing (simulating SMS service)
+            console.log(`📱 SMS sent to ${phone}: Your reset code is ${resetCode}`);
+            
+            setTimeout(() => {
+                showResetForm(email);
+            }, 1500);
+        }
+        
+        // Mask phone number for display
+        function maskPhone(phone) {
+            const cleaned = phone.replace(/\D/g, '');
+            if (cleaned.length >= 10) {
+                return '*' * (cleaned.length - 4) + cleaned.slice(-4);
+            }
+            return '***' + cleaned.slice(-3);
+        }
+        
+        // Handle Reset Password
+        function handleReset(event) {
+            event.preventDefault();
+            clearErrors();
+            
+            const code = document.getElementById('resetCode').value.trim().toUpperCase();
+            const email = document.getElementById('forgotEmail').value.trim();
+            const password = document.getElementById('resetPassword').value;
+            const confirmPassword = document.getElementById('confirmResetPassword').value;
+            const errorDiv = document.getElementById('resetError');
+            
+            // Validate code
+            const resetCodes = JSON.parse(localStorage.getItem('resetCodes')) || {};
+            const resetData = resetCodes[email];
+            
+            if (!resetData || resetData.code !== code) {
+                errorDiv.textContent = '❌ Invalid reset code';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            if (!validatePassword(password)) {
+                errorDiv.textContent = '❌ Password must be at least 6 characters';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                errorDiv.textContent = '❌ Passwords do not match';
+                errorDiv.classList.add('show');
+                return;
+            }
+            
+            // Update password
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email);
+            if (user) {
+                user.password = password;
+                localStorage.setItem('users', JSON.stringify(users));
+                delete resetCodes[email];
+                localStorage.setItem('resetCodes', JSON.stringify(resetCodes));
+                
+                alert('✅ Password reset successful! Please login with your new password.');
+                showLoginForm();
+                document.getElementById('loginEmail').value = email;
+            }
+        }
+        
+        // Show Dashboard
+        function showDashboard(user) {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+        }
+        
+        // Handle Logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser');
+                document.getElementById('authContainer').style.display = 'flex';
+                document.getElementById('dashboardContainer').style.display = 'none';
+                showLoginForm();
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
